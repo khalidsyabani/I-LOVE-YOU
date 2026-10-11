@@ -1,0 +1,852 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b19">
+<title>For Someone Special ♡</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+    --bg: #080b19;
+    --pink: #ff8eae;
+    --gold: #f8d9a0;
+    --white: #fff8f5;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#sky { z-index: 0; }
+#fx { z-index: 1; }
+
+.ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 50% 110%,
+            rgba(117, 52, 105, .24), transparent 55%),
+        radial-gradient(ellipse at 15% 20%,
+            rgba(39, 67, 130, .19), transparent 45%),
+        linear-gradient(180deg, #080b19 0%, #101329 55%, #090b18 100%);
+}
+
+.moon {
+    position: fixed;
+    z-index: 0;
+    top: 9%;
+    right: 13%;
+    width: clamp(48px, 8vw, 88px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #fff1d5;
+    box-shadow:
+        0 0 25px rgba(255, 232, 195, .25),
+        0 0 90px rgba(255, 232, 195, .10);
+    opacity: .85;
+}
+
+.moon::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #101329;
+    top: -12px;
+    left: 18px;
+}
+
+.frame {
+    position: fixed;
+    z-index: 3;
+    inset: 16px;
+    border: 1px solid rgba(255, 228, 220, .12);
+    border-radius: 18px;
+    pointer-events: none;
+}
+
+.frame::before,
+.frame::after {
+    content: "✧";
+    position: absolute;
+    color: rgba(248, 217, 160, .65);
+    font-size: 18px;
+}
+
+.frame::before {
+    top: 12px;
+    left: 14px;
+}
+
+.frame::after {
+    bottom: 12px;
+    right: 14px;
+}
+
+.content {
+    position: fixed;
+    z-index: 2;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px 20px;
+    pointer-events: none;
+}
+
+.intro {
+    position: absolute;
+    top: 17%;
+    left: 0;
+    width: 100%;
+    animation: fadeDown 1.8s ease both;
+}
+
+.eyebrow {
+    font-size: 9px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: .85;
+}
+
+.intro-line {
+    width: 42px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 15px auto;
+}
+
+.intro p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(17px, 3vw, 23px);
+    font-style: italic;
+    letter-spacing: 1px;
+    color: rgba(255, 248, 245, .75);
+}
+
+#countdown {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(110px, 25vw, 190px);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--white);
+    text-shadow:
+        0 0 25px rgba(255, 142, 174, .35),
+        0 0 80px rgba(248, 217, 160, .15);
+    animation: numberIn .85s ease both;
+}
+
+#ready {
+    margin-top: 18px;
+    font-size: 9px;
+    letter-spacing: 7px;
+    color: var(--gold);
+    text-transform: uppercase;
+}
+
+#final {
+    display: none;
+    width: 100%;
+    animation: finalIn 2s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.small-label {
+    font-size: 9px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.love-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 11vw, 108px);
+    font-weight: 500;
+    line-height: .95;
+    letter-spacing: 1px;
+    color: #fff4ef;
+    text-shadow:
+        0 0 18px rgba(255, 142, 174, .35),
+        0 0 70px rgba(255, 142, 174, .15);
+}
+
+.love-title span {
+    display: block;
+    color: var(--pink);
+    font-style: italic;
+    margin-top: 8px;
+}
+
+.divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 26px auto 20px;
+    color: var(--gold);
+    font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    width: 38px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.divider::after {
+    transform: rotate(180deg);
+}
+
+.subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(19px, 4vw, 28px);
+    font-style: italic;
+    color: rgba(255, 248, 245, .85);
+    letter-spacing: 1px;
+}
+
+.forever {
+    margin-top: 14px;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: rgba(248, 217, 160, .75);
+    text-transform: uppercase;
+}
+
+.heart {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 26px;
+    color: var(--pink);
+    filter: drop-shadow(0 0 12px rgba(255, 142, 174, .7));
+    animation: heartbeat 1.4s ease-in-out infinite;
+}
+
+.bottom-note {
+    position: fixed;
+    z-index: 4;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: rgba(255, 248, 245, .35);
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.controls {
+    position: fixed;
+    z-index: 5;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.control-btn {
+    border: 1px solid rgba(248, 217, 160, .3);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, .045);
+    backdrop-filter: blur(12px);
+    color: rgba(255, 248, 245, .8);
+    padding: 11px 17px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.control-btn:hover {
+    background: rgba(255, 142, 174, .14);
+    border-color: var(--pink);
+    color: white;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes numberIn {
+    from { opacity: 0; transform: scale(1.3); filter: blur(8px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes finalIn {
+    from { opacity: 0; transform: translateY(25px) scale(.94); filter: blur(8px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.22); }
+}
+
+@media (max-height: 600px) {
+    .intro { top: 8%; }
+    .love-title { font-size: clamp(42px, 9vh, 72px); }
+    .divider { margin: 14px auto 10px; }
+    .heart { margin-top: 12px; }
+    .controls { bottom: 35px; }
+    .bottom-note { bottom: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="ambient"></div>
+<div class="moon"></div>
+<canvas id="sky"></canvas>
+<canvas id="fx"></canvas>
+<div class="frame"></div>
+
+<div class="content">
+    <div class="intro" id="intro">
+        <div class="eyebrow">A little message for you</div>
+        <div class="intro-line"></div>
+        <p>Somewhere between the stars,</p>
+        <p>there is a thought of you.</p>
+    </div>
+
+    <div id="countdown">3</div>
+
+    <div id="ready" style="display:none">
+        Make a little wish
+    </div>
+
+    <div id="final">
+        <div class="small-label">For someone special</div>
+
+        <div class="love-title">
+            I love
+            <span>you.</span>
+        </div>
+
+        <div class="divider">✧</div>
+
+        <div class="subtitle">
+            You make my world a little brighter.
+        </div>
+
+        <div class="forever">
+            With love, always
+        </div>
+
+        <div class="heart">♥</div>
+    </div>
+</div>
+
+<div class="controls">
+    <button class="control-btn" id="replay">↻ Replay</button>
+    <button class="control-btn" id="sound">♫ Sound: Off</button>
+</div>
+
+<div class="bottom-note">Made with love · Just for you</div>
+
+<script>
+const sky = document.getElementById("sky");
+const fx = document.getElementById("fx");
+const sctx = sky.getContext("2d");
+const ctx = fx.getContext("2d");
+
+const countdownEl = document.getElementById("countdown");
+const readyEl = document.getElementById("ready");
+const finalEl = document.getElementById("final");
+const introEl = document.getElementById("intro");
+
+let W, H, dpr;
+let stars = [];
+let particles = [];
+let rockets = [];
+let hearts = [];
+
+let phase = "intro";
+let phaseStart = 0;
+let lastCount = 0;
+let count = 3;
+let soundOn = false;
+let audioCtx = null;
+let animationId;
+
+const palette = [
+    "#ff8eae",
+    "#f8d9a0",
+    "#fff3d6",
+    "#e7b7ff",
+    "#a9c7ff",
+    "#ffffff",
+    "#ffb6c8"
+];
+
+function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = innerWidth;
+    H = innerHeight;
+
+    [sky, fx].forEach(c => {
+        c.width = W * dpr;
+        c.height = H * dpr;
+        c.style.width = W + "px";
+        c.style.height = H + "px";
+    });
+
+    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    createStars();
+}
+
+window.addEventListener("resize", resize);
+
+function rand(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function createStars() {
+    stars = [];
+
+    for (let i = 0; i < 150; i++) {
+        stars.push({
+            x: rand(0, W),
+            y: rand(0, H),
+            r: rand(.4, 1.5),
+            phase: rand(0, Math.PI * 2),
+            speed: rand(.005, .018)
+        });
+    }
+}
+
+function drawStars(time) {
+    sctx.clearRect(0, 0, W, H);
+
+    for (const s of stars) {
+        const alpha = .25 + Math.abs(
+            Math.sin(time * s.speed + s.phase)
+        ) * .65;
+
+        sctx.beginPath();
+        sctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        sctx.fillStyle = `rgba(255,244,230,${alpha})`;
+        sctx.fill();
+    }
+}
+
+class Particle {
+    constructor(x, y, color, vx, vy, size) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.vx = vx;
+        this.vy = vy;
+        this.size = size || rand(1, 2.8);
+        this.life = 1;
+        this.decay = rand(.008, .018);
+        this.gravity = .035;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        this.vx *= .986;
+        this.vy *= .986;
+        this.vy += this.gravity;
+
+        this.life -= this.decay;
+    }
+
+    draw() {
+        if (this.life <= 0) return;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.life);
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = this.color;
+
+        ctx.beginPath();
+        ctx.arc(
+            this.x, this.y,
+            Math.max(.3, this.size * this.life),
+            0, Math.PI * 2
+        );
+        ctx.fill();
+        ctx.restore();
+    }
+}
+
+function burst(x, y, amount = 100, color) {
+    const c = color || palette[
+        Math.floor(Math.random() * palette.length)
+    ];
+
+    for (let i = 0; i < amount; i++) {
+        const a = rand(0, Math.PI * 2);
+        const speed = Math.pow(Math.random(), .45) * 5.5 + .5;
+
+        particles.push(new Particle(
+            x, y, c,
+            Math.cos(a) * speed,
+            Math.sin(a) * speed,
+            rand(1, 3)
+        ));
+    }
+
+    // Kilauan kecil di sekeliling ledakan
+    for (let i = 0; i < amount * .25; i++) {
+        const a = rand(0, Math.PI * 2);
+        const speed = rand(1, 3);
+
+        particles.push(new Particle(
+            x, y, "#fff5df",
+            Math.cos(a) * speed,
+            Math.sin(a) * speed,
+            rand(.5, 1.5)
+        ));
+    }
+
+    if (soundOn) playChime();
+}
+
+class Rocket {
+    constructor() {
+        this.x = rand(W * .12, W * .88);
+        this.y = H + 5;
+        this.tx = rand(W * .12, W * .88);
+        this.ty = rand(H * .13, H * .53);
+        this.speed = rand(5, 8);
+        this.color = palette[
+            Math.floor(Math.random() * palette.length)
+        ];
+        this.trail = [];
+    }
+
+    update() {
+        this.trail.push({ x: this.x, y: this.y });
+
+        if (this.trail.length > 9) this.trail.shift();
+
+        const dx = this.tx - this.x;
+        const dy = this.ty - this.y;
+        const d = Math.hypot(dx, dy);
+
+        if (d < this.speed + 2) {
+            burst(this.tx, this.ty, 95, this.color);
+            return false;
+        }
+
+        this.x += dx / d * this.speed;
+        this.y += dy / d * this.speed;
+
+        return true;
+    }
+
+    draw() {
+        ctx.save();
+
+        this.trail.forEach((p, i) => {
+            ctx.globalAlpha = i / this.trail.length * .65;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#fff8e8";
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+}
+
+function heartBurst(cx, cy) {
+    for (let i = 0; i < 220; i++) {
+        const t = Math.random() * Math.PI * 2;
+
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy =
+            13 * Math.cos(t)
+            - 5 * Math.cos(2 * t)
+            - 2 * Math.cos(3 * t)
+            - Math.cos(4 * t);
+
+        const x = cx + hx * 7;
+        const y = cy - hy * 7;
+        const dx = x - cx;
+        const dy = y - cy;
+        const spread = rand(.015, .045);
+
+        particles.push(new Particle(
+            x, y,
+            palette[Math.floor(Math.random() * palette.length)],
+            dx * spread,
+            dy * spread,
+            rand(1, 2.5)
+        ));
+    }
+}
+
+function drawHeart(x, y, size, color, alpha) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size / 30, size / 30);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = color;
+
+    ctx.beginPath();
+    ctx.moveTo(0, 10);
+    ctx.bezierCurveTo(-30, -10, -20, -25, 0, -10);
+    ctx.bezierCurveTo(20, -25, 30, -10, 0, 10);
+    ctx.fill();
+    ctx.restore();
+}
+
+function updateHearts() {
+    if (Math.random() < .035) {
+        hearts.push({
+            x: rand(20, W - 20),
+            y: H + 20,
+            size: rand(8, 18),
+            speed: rand(.4, 1.2),
+            alpha: rand(.2, .55),
+            color: Math.random() > .5 ? "#ff8eae" : "#f8d9a0"
+        });
+    }
+
+    for (let i = hearts.length - 1; i >= 0; i--) {
+        const h = hearts[i];
+        h.y -= h.speed;
+        h.x += Math.sin(h.y * .012) * .35;
+
+        drawHeart(h.x, h.y, h.size, h.color, h.alpha);
+
+        if (h.y < -30) hearts.splice(i, 1);
+    }
+}
+
+function showCountdown(n) {
+    countdownEl.style.display = "block";
+    readyEl.style.display = "block";
+    finalEl.style.display = "none";
+
+    countdownEl.textContent = n;
+
+    // Restart animasi angka
+    countdownEl.style.animation = "none";
+    void countdownEl.offsetWidth;
+    countdownEl.style.animation = "numberIn .85s ease both";
+}
+
+function startFinal() {
+    phase = "final";
+
+    countdownEl.style.display = "none";
+    readyEl.style.display = "none";
+    introEl.style.display = "none";
+    finalEl.style.display = "block";
+
+    heartBurst(W / 2, H / 2);
+
+    for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+            burst(
+                rand(W * .1, W * .9),
+                rand(H * .12, H * .65),
+                110
+            );
+        }, i * 300);
+    }
+}
+
+function playChime() {
+    try {
+        if (!audioCtx) {
+            audioCtx = new (
+                window.AudioContext || window.webkitAudioContext
+            )();
+        }
+
+        if (audioCtx.state === "suspended") {
+            audioCtx.resume();
+        }
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.value = rand(520, 950);
+
+        gain.gain.setValueAtTime(.0001, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+            .045, audioCtx.currentTime + .025
+        );
+        gain.gain.exponentialRampToValueAtTime(
+            .0001, audioCtx.currentTime + .5
+        );
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + .52);
+    } catch (e) {
+        console.log("Audio tidak tersedia.");
+    }
+}
+
+function restart() {
+    particles = [];
+    rockets = [];
+    hearts = [];
+
+    phase = "intro";
+    phaseStart = performance.now();
+    lastCount = 0;
+    count = 3;
+
+    introEl.style.display = "block";
+    countdownEl.style.display = "none";
+    readyEl.style.display = "none";
+    finalEl.style.display = "none";
+
+    ctx.clearRect(0, 0, W, H);
+}
+
+document.getElementById("replay").addEventListener("click", restart);
+
+document.getElementById("sound").addEventListener("click", () => {
+    soundOn = !soundOn;
+
+    document.getElementById("sound").textContent =
+        soundOn ? "♫ Sound: On" : "♫ Sound: Off";
+
+    if (soundOn) playChime();
+});
+
+function animate(now) {
+    drawStars(now);
+
+    // Jejak tipis untuk efek cahaya yang lembut
+    ctx.fillStyle = "rgba(8, 11, 25, 0.20)";
+    ctx.fillRect(0, 0, W, H);
+
+    const elapsed = now - phaseStart;
+
+    if (phase === "intro") {
+        if (Math.random() < .045) {
+            rockets.push(new Rocket());
+        }
+
+        if (elapsed > 4500) {
+            phase = "countdown";
+            count = 3;
+            lastCount = now;
+            showCountdown(count);
+        }
+    }
+
+    else if (phase === "countdown") {
+        if (now - lastCount >= 1000) {
+            lastCount = now;
+            count--;
+
+            if (count > 0) {
+                showCountdown(count);
+            } else {
+                startFinal();
+            }
+        }
+
+        if (Math.random() < .055) {
+            burst(rand(0, W), rand(H * .12, H * .65), 30);
+        }
+    }
+
+    else if (phase === "final") {
+        updateHearts();
+
+        if (Math.random() < .045) {
+            rockets.push(new Rocket());
+        }
+
+        if (Math.random() < .018) {
+            burst(rand(0, W), rand(H * .12, H * .6), 75);
+        }
+    }
+
+    for (let i = rockets.length - 1; i >= 0; i--) {
+        const alive = rockets[i].update();
+        rockets[i].draw();
+
+        if (!alive) rockets.splice(i, 1);
+    }
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw();
+
+        if (p.life <= 0) particles.splice(i, 1);
+    }
+
+    animationId = requestAnimationFrame(animate);
+}
+
+resize();
+restart();
+requestAnimationFrame(animate);
+</script>
+
+</body>
+</html>
