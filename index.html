@@ -1,852 +1,685 @@
-
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b19">
-<title>For Someone Special ♡</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hanif & Fanesa | Love Story</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deepBlue: '#073B4C',
+                        turquoise: '#06D6A0',
+                        sand: '#F4D35E',
+                        softDark: '#04222D',
+                        cardBg: '#0A4A60',
+                        romanticPink: '#EF476F'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #073B4C;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+        .font-serif-title {
+            font-family: 'Playfair Display', serif;
+        }
 
-:root {
-    --bg: #080b19;
-    --pink: #ff8eae;
-    --gold: #f8d9a0;
-    --white: #fff8f5;
-}
+        /* Glassmorphism styling */
+        .glass-card {
+            background: rgba(10, 74, 96, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(6, 214, 160, 0.25);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(6, 214, 160, 0.5);
+            box-shadow: 0 12px 35px -10px rgba(6, 214, 160, 0.25);
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        /* Vinyl Record Animations */
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .spin-vinyl {
+            animation: spinSlow 8s linear infinite;
+        }
 
-body {
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--white);
-    font-family: 'Inter', sans-serif;
-}
+        .paused {
+            animation-play-state: paused !important;
+        }
 
-canvas {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #04222D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #06D6A0;
+            border-radius: 4px;
+        }
 
-#sky { z-index: 0; }
-#fx { z-index: 1; }
+        /* Ocean Wave Animations */
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 80px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 C150,90 350,-40 500,40 C650,120 900,20 1200,60 L1200,120 L0,120 Z" fill="%2304222D" opacity="0.6"/></svg>');
+            background-size: 1200px 80px;
+            pointer-events: none;
+        }
+        
+        .wave1 {
+            animation: animateWave 10s linear infinite;
+        }
 
-.ambient {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(ellipse at 50% 110%,
-            rgba(117, 52, 105, .24), transparent 55%),
-        radial-gradient(ellipse at 15% 20%,
-            rgba(39, 67, 130, .19), transparent 45%),
-        linear-gradient(180deg, #080b19 0%, #101329 55%, #090b18 100%);
-}
+        .wave2 {
+            bottom: 10px;
+            opacity: 0.3;
+            animation: animateWave 6s linear infinite reverse;
+        }
 
-.moon {
-    position: fixed;
-    z-index: 0;
-    top: 9%;
-    right: 13%;
-    width: clamp(48px, 8vw, 88px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: #fff1d5;
-    box-shadow:
-        0 0 25px rgba(255, 232, 195, .25),
-        0 0 90px rgba(255, 232, 195, .10);
-    opacity: .85;
-}
+        @keyframes animateWave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-1200px); }
+        }
 
-.moon::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: #101329;
-    top: -12px;
-    left: 18px;
-}
-
-.frame {
-    position: fixed;
-    z-index: 3;
-    inset: 16px;
-    border: 1px solid rgba(255, 228, 220, .12);
-    border-radius: 18px;
-    pointer-events: none;
-}
-
-.frame::before,
-.frame::after {
-    content: "✧";
-    position: absolute;
-    color: rgba(248, 217, 160, .65);
-    font-size: 18px;
-}
-
-.frame::before {
-    top: 12px;
-    left: 14px;
-}
-
-.frame::after {
-    bottom: 12px;
-    right: 14px;
-}
-
-.content {
-    position: fixed;
-    z-index: 2;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 30px 20px;
-    pointer-events: none;
-}
-
-.intro {
-    position: absolute;
-    top: 17%;
-    left: 0;
-    width: 100%;
-    animation: fadeDown 1.8s ease both;
-}
-
-.eyebrow {
-    font-size: 9px;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    color: var(--gold);
-    opacity: .85;
-}
-
-.intro-line {
-    width: 42px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 15px auto;
-}
-
-.intro p {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(17px, 3vw, 23px);
-    font-style: italic;
-    letter-spacing: 1px;
-    color: rgba(255, 248, 245, .75);
-}
-
-#countdown {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(110px, 25vw, 190px);
-    font-weight: 400;
-    line-height: 1;
-    color: var(--white);
-    text-shadow:
-        0 0 25px rgba(255, 142, 174, .35),
-        0 0 80px rgba(248, 217, 160, .15);
-    animation: numberIn .85s ease both;
-}
-
-#ready {
-    margin-top: 18px;
-    font-size: 9px;
-    letter-spacing: 7px;
-    color: var(--gold);
-    text-transform: uppercase;
-}
-
-#final {
-    display: none;
-    width: 100%;
-    animation: finalIn 2s cubic-bezier(.2,.8,.2,1) both;
-}
-
-.small-label {
-    font-size: 9px;
-    letter-spacing: 6px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-}
-
-.love-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(48px, 11vw, 108px);
-    font-weight: 500;
-    line-height: .95;
-    letter-spacing: 1px;
-    color: #fff4ef;
-    text-shadow:
-        0 0 18px rgba(255, 142, 174, .35),
-        0 0 70px rgba(255, 142, 174, .15);
-}
-
-.love-title span {
-    display: block;
-    color: var(--pink);
-    font-style: italic;
-    margin-top: 8px;
-}
-
-.divider {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin: 26px auto 20px;
-    color: var(--gold);
-    font-size: 13px;
-}
-
-.divider::before,
-.divider::after {
-    content: "";
-    width: 38px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold));
-}
-
-.divider::after {
-    transform: rotate(180deg);
-}
-
-.subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(19px, 4vw, 28px);
-    font-style: italic;
-    color: rgba(255, 248, 245, .85);
-    letter-spacing: 1px;
-}
-
-.forever {
-    margin-top: 14px;
-    font-size: 9px;
-    letter-spacing: 4px;
-    color: rgba(248, 217, 160, .75);
-    text-transform: uppercase;
-}
-
-.heart {
-    display: inline-block;
-    margin-top: 24px;
-    font-size: 26px;
-    color: var(--pink);
-    filter: drop-shadow(0 0 12px rgba(255, 142, 174, .7));
-    animation: heartbeat 1.4s ease-in-out infinite;
-}
-
-.bottom-note {
-    position: fixed;
-    z-index: 4;
-    bottom: 40px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    color: rgba(255, 248, 245, .35);
-    font-size: 8px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    pointer-events: none;
-}
-
-.controls {
-    position: fixed;
-    z-index: 5;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    pointer-events: auto;
-}
-
-.control-btn {
-    border: 1px solid rgba(248, 217, 160, .3);
-    border-radius: 30px;
-    background: rgba(255, 255, 255, .045);
-    backdrop-filter: blur(12px);
-    color: rgba(255, 248, 245, .8);
-    padding: 11px 17px;
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: .3s ease;
-}
-
-.control-btn:hover {
-    background: rgba(255, 142, 174, .14);
-    border-color: var(--pink);
-    color: white;
-    transform: translateY(-2px);
-}
-
-@keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes numberIn {
-    from { opacity: 0; transform: scale(1.3); filter: blur(8px); }
-    to { opacity: 1; transform: scale(1); filter: blur(0); }
-}
-
-@keyframes finalIn {
-    from { opacity: 0; transform: translateY(25px) scale(.94); filter: blur(8px); }
-    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-}
-
-@keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.22); }
-}
-
-@media (max-height: 600px) {
-    .intro { top: 8%; }
-    .love-title { font-size: clamp(42px, 9vh, 72px); }
-    .divider { margin: 14px auto 10px; }
-    .heart { margin-top: 12px; }
-    .controls { bottom: 35px; }
-    .bottom-note { bottom: 12px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: .01ms !important;
-    }
-}
-</style>
+        /* Pulse Heart Animation */
+        @keyframes heartPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .animate-heart {
+            animation: heartPulse 1.5s infinite ease-in-out;
+        }
+    </style>
 </head>
+<body class="bg-deepBlue text-white relative selection:bg-turquoise selection:text-deepBlue">
 
-<body>
+    <canvas id="starCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
 
-<div class="ambient"></div>
-<div class="moon"></div>
-<canvas id="sky"></canvas>
-<canvas id="fx"></canvas>
-<div class="frame"></div>
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 left-0 w-full z-40 glass-card border-b border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-xl md:text-2xl font-serif-title font-bold text-turquoise tracking-wider flex items-center gap-2">
+                Hanif <i class="fa-solid fa-heart text-sand text-sm animate-heart"></i> Fanesa
+            </a>
+            <!-- Desktop Nav Links -->
+            <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <a href="#counter" class="hover:text-turquoise transition-colors">Waktu Kita</a>
+                <a href="#music" class="hover:text-turquoise transition-colors">Musik</a>
+                <a href="#timeline" class="hover:text-turquoise transition-colors">Perjalanan</a>
+                <a href="#letters" class="hover:text-turquoise transition-colors">Surat Cinta</a>
+                <a href="#bucketlist" class="hover:text-turquoise transition-colors">Impian</a>
+                <a href="#galeri" class="hover:text-turquoise transition-colors">Galeri</a>
+            </div>
+            <!-- Mobile Menu Toggle -->
+            <button id="menuBtn" class="md:hidden text-turquoise focus:outline-none text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden glass-card px-6 py-4 border-t border-white/10 flex flex-col space-y-3">
+            <a href="#counter" class="mobile-link hover:text-turquoise py-1">Waktu Kita</a>
+            <a href="#music" class="mobile-link hover:text-turquoise py-1">Musik</a>
+            <a href="#timeline" class="mobile-link hover:text-turquoise py-1">Perjalanan</a>
+            <a href="#letters" class="mobile-link hover:text-turquoise py-1">Surat Cinta</a>
+            <a href="#bucketlist" class="mobile-link hover:text-turquoise py-1">Impian</a>
+            <a href="#galeri" class="mobile-link hover:text-turquoise py-1">Galeri</a>
+        </div>
+    </nav>
 
-<div class="content">
-    <div class="intro" id="intro">
-        <div class="eyebrow">A little message for you</div>
-        <div class="intro-line"></div>
-        <p>Somewhere between the stars,</p>
-        <p>there is a thought of you.</p>
-    </div>
+    <!-- Hero & Relationship Counter Section -->
+    <section id="home" class="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-20 px-6 text-center z-10">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cardBg border border-turquoise/40 text-turquoise text-xs font-semibold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-infinity text-sand"></i> FOREVER & ALWAYS
+        </div>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold font-serif-title mb-4 leading-tight">
+            Cerita Cinta <span class="text-transparent bg-clip-text bg-gradient-to-r from-turquoise via-sand to-turquoise">Hanif & Fanesa</span>
+        </h1>
+        <p class="text-gray-300 text-base md:text-lg max-w-xl mb-12">
+            Setiap detik yang kita lewati bersama adalah kenangan terindah yang diukir dengan ketulusan dan kebahagiaan.
+        </p>
 
-    <div id="countdown">3</div>
+        <!-- Live Love Counter Cards -->
+        <div id="counter" class="w-full max-w-3xl glass-card rounded-3xl p-8 shadow-2xl mb-8 relative border border-turquoise/30">
+            <h2 class="text-xs uppercase tracking-widest text-sand font-bold mb-6">KITA TELAH BERSAMA SELAMA</h2>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="bg-softDark/80 p-4 rounded-2xl border border-turquoise/20">
+                    <span id="countDays" class="block text-3xl md:text-5xl font-extrabold text-turquoise">0</span>
+                    <span class="text-xs uppercase text-gray-400 tracking-wider font-medium mt-1 block">Hari</span>
+                </div>
+                <div class="bg-softDark/80 p-4 rounded-2xl border border-turquoise/20">
+                    <span id="countHours" class="block text-3xl md:text-5xl font-extrabold text-sand">00</span>
+                    <span class="text-xs uppercase text-gray-400 tracking-wider font-medium mt-1 block">Jam</span>
+                </div>
+                <div class="bg-softDark/80 p-4 rounded-2xl border border-turquoise/20">
+                    <span id="countMinutes" class="block text-3xl md:text-5xl font-extrabold text-turquoise">00</span>
+                    <span class="text-xs uppercase text-gray-400 tracking-wider font-medium mt-1 block">Menit</span>
+                </div>
+                <div class="bg-softDark/80 p-4 rounded-2xl border border-turquoise/20">
+                    <span id="countSeconds" class="block text-3xl md:text-5xl font-extrabold text-sand">00</span>
+                    <span class="text-xs uppercase text-gray-400 tracking-wider font-medium mt-1 block">Detik</span>
+                </div>
+            </div>
 
-    <div id="ready" style="display:none">
-        Make a little wish
-    </div>
+            <!-- Custom Date Setter -->
+            <div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-gray-300">
+                <span id="anniversaryLabel"><i class="fa-solid fa-calendar-heart text-turquoise mr-1"></i> Tanggal Jadian: <strong class="text-white">12 Februari 2023</strong></span>
+                <button onclick="toggleDateInput()" class="text-sand hover:underline font-semibold flex items-center gap-1">
+                    <i class="fa-solid fa-pen-to-square"></i> Ubah Tanggal
+                </button>
+            </div>
 
-    <div id="final">
-        <div class="small-label">For someone special</div>
-
-        <div class="love-title">
-            I love
-            <span>you.</span>
+            <!-- Date Input Form (Hidden by default) -->
+            <div id="dateInputContainer" class="hidden mt-4 p-4 bg-softDark rounded-xl border border-turquoise/30 flex flex-col sm:flex-row gap-3 items-center justify-center">
+                <input type="date" id="startDateInput" class="px-3 py-2 rounded-lg bg-deepBlue text-white border border-turquoise/40 text-xs focus:outline-none">
+                <button onclick="saveStartDate()" class="px-4 py-2 rounded-lg bg-turquoise text-deepBlue font-bold text-xs hover:bg-turquoise/90">
+                    Simpan
+                </button>
+            </div>
         </div>
 
-        <div class="divider">✧</div>
-
-        <div class="subtitle">
-            You make my world a little brighter.
+        <!-- Ocean Wave Bottom Decoration -->
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none pointer-events-none h-16">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
         </div>
+    </section>
 
-        <div class="forever">
-            With love, always
+    <!-- Aesthetic Vinyl Record Player Section -->
+    <section id="music" class="py-24 px-6 bg-softDark relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-serif-title font-bold mb-2">Lagu <span class="text-turquoise">Kenangan Kita</span></h2>
+                <div class="w-16 h-1 bg-sand mx-auto rounded-full"></div>
+                <p class="text-gray-400 text-sm mt-3">Putar musik ambient relaksasi & harmoni hangat untuk mengiringi kenangan</p>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 md:p-12 border border-turquoise/30 flex flex-col md:flex-row items-center gap-8 md:gap-12 shadow-2xl">
+                <!-- Vinyl Record Container -->
+                <div class="relative w-48 h-48 md:w-56 md:h-56 flex-shrink-0 flex items-center justify-center">
+                    <div id="vinylRecord" class="w-full h-full rounded-full bg-black border-4 border-gray-800 shadow-2xl flex items-center justify-center spin-vinyl paused relative">
+                        <!-- Grooves -->
+                        <div class="absolute inset-3 rounded-full border border-gray-700/50"></div>
+                        <div class="absolute inset-7 rounded-full border border-gray-700/50"></div>
+                        <div class="absolute inset-12 rounded-full border border-gray-700/30"></div>
+                        <!-- Center Label -->
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-turquoise to-sand flex items-center justify-center text-deepBlue font-bold text-xs text-center p-2 shadow-inner border-2 border-white/20">
+                            H & F
+                        </div>
+                    </div>
+                    <!-- Tonearm decoration -->
+                    <div class="absolute -top-4 -right-2 w-16 h-20 border-r-2 border-t-2 border-sand/70 rounded-tr-xl pointer-events-none origin-top-right"></div>
+                </div>
+
+                <!-- Player Details & Controls -->
+                <div class="flex-grow text-center md:text-left space-y-4">
+                    <div>
+                        <span class="text-xs font-semibold text-turquoise uppercase tracking-wider">Acoustic Ambient Melody</span>
+                        <h3 class="text-2xl font-bold font-serif-title text-white mt-1">Ocean Waves & Romantic Harmony</h3>
+                        <p class="text-gray-300 text-sm mt-2">Dibuat khusus menggunakan sintesis suara relaksasi mendalam untuk Hanif & Fanesa.</p>
+                    </div>
+
+                    <!-- Interactive Controls -->
+                    <div class="pt-4 flex flex-wrap items-center justify-center md:justify-start gap-4">
+                        <button id="playAudioBtn" class="px-8 py-3.5 rounded-full bg-turquoise text-deepBlue font-extrabold hover:bg-turquoise/90 transition-all shadow-lg shadow-turquoise/20 flex items-center gap-3">
+                            <i id="playIcon" class="fa-solid fa-play"></i>
+                            <span id="playText">Putar Musik</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="heart">♥</div>
+    <!-- Romantic Timeline Section -->
+    <section id="timeline" class="py-24 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-serif-title font-bold mb-2">Perjalanan <span class="text-sand">Cinta Kita</span></h2>
+                <div class="w-16 h-1 bg-turquoise mx-auto rounded-full"></div>
+                <p class="text-gray-400 text-sm mt-3">Momen-momen indah yang membentuk kisah Hanif & Fanesa</p>
+            </div>
+
+            <!-- Vertical Timeline -->
+            <div class="relative border-l-2 border-turquoise/40 ml-4 md:ml-32 space-y-12">
+                <!-- Timeline 1 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-sand border-4 border-deepBlue group-hover:scale-125 transition-transform"></div>
+                    <span class="text-xs font-bold text-turquoise uppercase tracking-wider">Awal Bertemu</span>
+                    <h3 class="text-xl font-bold text-white mt-0.5">Sapaan Pertama Yang Berkesan</h3>
+                    <p class="text-gray-300 text-sm mt-2 glass-card p-4 rounded-xl border border-turquoise/20">
+                        Pertemuan sederhana yang tidak pernah disangka akan berubah menjadi ikatan yang begitu kuat. Canda tawa pertama menjadi awal mula segalanya.
+                    </p>
+                </div>
+
+                <!-- Timeline 2 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-turquoise border-4 border-deepBlue group-hover:scale-125 transition-transform"></div>
+                    <span class="text-xs font-bold text-sand uppercase tracking-wider">Momen Komitmen</span>
+                    <h3 class="text-xl font-bold text-white mt-0.5">Resmi Menjalani Bersama</h3>
+                    <p class="text-gray-300 text-sm mt-2 glass-card p-4 rounded-xl border border-turquoise/20">
+                        Hari di mana Hanif dan Fanesa memutuskan untuk saling menggenggam tangan, berjanji untuk saling mendukung dan melengkapi satu sama lain.
+                    </p>
+                </div>
+
+                <!-- Timeline 3 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-sand border-4 border-deepBlue group-hover:scale-125 transition-transform"></div>
+                    <span class="text-xs font-bold text-turquoise uppercase tracking-wider">Petualangan Bersama</span>
+                    <h3 class="text-xl font-bold text-white mt-0.5">Jalan-Jalan & Kenangan Manis</h3>
+                    <p class="text-gray-300 text-sm mt-2 glass-card p-4 rounded-xl border border-turquoise/20">
+                        Menikmati senja bersama, berdiskusi tentang impian masa depan, dan menciptakan ribuan senyuman yang tak terlupakan.
+                    </p>
+                </div>
+
+                <!-- Timeline 4 -->
+                <div class="relative pl-8 group">
+                    <div class="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-turquoise border-4 border-deepBlue group-hover:scale-125 transition-transform"></div>
+                    <span class="text-xs font-bold text-sand uppercase tracking-wider">Masa Depan</span>
+                    <h3 class="text-xl font-bold text-white mt-0.5">Langkah Menuju Hari Esok</h3>
+                    <p class="text-gray-300 text-sm mt-2 glass-card p-4 rounded-xl border border-turquoise/20">
+                        Terus bertumbuh bersama, saling mendoakan yang terbaik, dan bersiap menyambut setiap kebahagiaan yang telah menanti di depan.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Digital Envelope & Secret Love Letters Section -->
+    <section id="letters" class="py-24 px-6 bg-softDark relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-serif-title font-bold mb-2">Amplop <span class="text-turquoise">Surat Cinta</span></h2>
+            <div class="w-16 h-1 bg-sand mx-auto rounded-full"></div>
+            <p class="text-gray-400 text-sm mt-3 mb-12">Klik amplop rahasia di bawah ini untuk membaca pesan tulus</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <!-- Envelope 1: From Hanif to Fanesa -->
+                <div onclick="openLetter('hanif')" class="glass-card p-8 rounded-2xl border border-turquoise/30 cursor-pointer hover:-translate-y-2 transition-all flex flex-col items-center group">
+                    <div class="w-20 h-20 rounded-full bg-turquoise/20 text-turquoise flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                    <span class="text-xs font-bold text-sand uppercase tracking-widest">DARI HANIF</span>
+                    <h3 class="text-xl font-bold font-serif-title text-white mt-1">Untuk Fanesa Tercinta</h3>
+                    <p class="text-xs text-gray-400 mt-2">Klik untuk membuka pesan rahasia <i class="fa-solid fa-heart text-romanticPink"></i></p>
+                </div>
+
+                <!-- Envelope 2: From Fanesa to Hanif -->
+                <div onclick="openLetter('fanesa')" class="glass-card p-8 rounded-2xl border border-turquoise/30 cursor-pointer hover:-translate-y-2 transition-all flex flex-col items-center group">
+                    <div class="w-20 h-20 rounded-full bg-sand/20 text-sand flex items-center justify-center text-4xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                    <span class="text-xs font-bold text-turquoise uppercase tracking-widest">DARI FANESA</span>
+                    <h3 class="text-xl font-bold font-serif-title text-white mt-1">Untuk Hanif Tersayang</h3>
+                    <p class="text-xs text-gray-400 mt-2">Klik untuk membuka pesan rahasia <i class="fa-solid fa-heart text-romanticPink"></i></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Couple Bucket List Section -->
+    <section id="bucketlist" class="py-24 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-serif-title font-bold mb-2">Impian <span class="text-sand">Bersama</span></h2>
+                <div class="w-16 h-1 bg-turquoise mx-auto rounded-full"></div>
+                <p class="text-gray-400 text-sm mt-3">Daftar keinginan yang ingin diwujudkan Hanif & Fanesa</p>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 border border-turquoise/30 shadow-2xl">
+                <!-- Progress Bar -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center text-xs font-bold mb-2">
+                        <span class="text-turquoise uppercase tracking-wider">Pencapaian Impian</span>
+                        <span id="bucketProgressText" class="text-sand">0% Terwujud</span>
+                    </div>
+                    <div class="w-full h-3 bg-softDark rounded-full overflow-hidden p-0.5 border border-white/10">
+                        <div id="bucketProgressBar" class="h-full bg-gradient-to-r from-turquoise to-sand rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Interactive Checklist Items -->
+                <div class="space-y-4" id="bucketListItems">
+                    <!-- Item 1 -->
+                    <label class="flex items-center gap-4 p-4 rounded-xl bg-softDark/80 border border-turquoise/20 cursor-pointer hover:border-turquoise transition-colors">
+                        <input type="checkbox" class="bucket-checkbox w-5 h-5 rounded text-turquoise bg-deepBlue border-turquoise/40 focus:ring-0" onchange="updateBucketProgress()">
+                        <span class="text-sm font-medium text-gray-200">Liburan pantai & menikmati matahari terbenam bersama</span>
+                    </label>
+                    <!-- Item 2 -->
+                    <label class="flex items-center gap-4 p-4 rounded-xl bg-softDark/80 border border-turquoise/20 cursor-pointer hover:border-turquoise transition-colors">
+                        <input type="checkbox" class="bucket-checkbox w-5 h-5 rounded text-turquoise bg-deepBlue border-turquoise/40 focus:ring-0" onchange="updateBucketProgress()">
+                        <span class="text-sm font-medium text-gray-200">Memasak makanan favorit berdua di akhir pekan</span>
+                    </label>
+                    <!-- Item 3 -->
+                    <label class="flex items-center gap-4 p-4 rounded-xl bg-softDark/80 border border-turquoise/20 cursor-pointer hover:border-turquoise transition-colors">
+                        <input type="checkbox" class="bucket-checkbox w-5 h-5 rounded text-turquoise bg-deepBlue border-turquoise/40 focus:ring-0" onchange="updateBucketProgress()">
+                        <span class="text-sm font-medium text-gray-200">Menonton konser musik lagu kesukaan berdua</span>
+                    </label>
+                    <!-- Item 4 -->
+                    <label class="flex items-center gap-4 p-4 rounded-xl bg-softDark/80 border border-turquoise/20 cursor-pointer hover:border-turquoise transition-colors">
+                        <input type="checkbox" class="bucket-checkbox w-5 h-5 rounded text-turquoise bg-deepBlue border-turquoise/40 focus:ring-0" onchange="updateBucketProgress()">
+                        <span class="text-sm font-medium text-gray-200">Saling memberikan kejutan kecil di hari biasa</span>
+                    </label>
+                    <!-- Item 5 -->
+                    <label class="flex items-center gap-4 p-4 rounded-xl bg-softDark/80 border border-turquoise/20 cursor-pointer hover:border-turquoise transition-colors">
+                        <input type="checkbox" class="bucket-checkbox w-5 h-5 rounded text-turquoise bg-deepBlue border-turquoise/40 focus:ring-0" onchange="updateBucketProgress()">
+                        <span class="text-sm font-medium text-gray-200">Mencapai masa depan yang sukses dan bahagia selamanya</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Section -->
+    <section id="galeri" class="py-24 px-6 bg-softDark relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-serif-title font-bold mb-2">Galeri <span class="text-turquoise">Kenangan</span></h2>
+                <div class="w-16 h-1 bg-sand mx-auto rounded-full"></div>
+                <p class="text-gray-400 text-sm mt-3">Potret momen-momen manis yang terekam indah</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Gallery 1 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80', 'Momen Senja Bersama', 'Menikmati keindahan langit bersama Fanesa')">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80" alt="Gallery" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepBlue via-transparent to-transparent opacity-60"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h3 class="font-bold text-white text-base">Momen Senja Bersama</h3>
+                            <p class="text-xs text-turquoise">Klik untuk memperbesar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery 2 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80', 'Genggaman Tangan', 'Saling menguatkan dalam setiap situasi')">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80" alt="Gallery" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepBlue via-transparent to-transparent opacity-60"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h3 class="font-bold text-white text-base">Genggaman Tangan</h3>
+                            <p class="text-xs text-sand">Klik untuk memperbesar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery 3 -->
+                <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80', 'Senyuman Hangat', 'Kebahagiaan sederhana yang tiada tara')">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80" alt="Gallery" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepBlue via-transparent to-transparent opacity-60"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h3 class="font-bold text-white text-base">Senyuman Hangat</h3>
+                            <p class="text-xs text-turquoise">Klik untuk memperbesar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 px-6 border-t border-white/10 text-center relative z-10 text-xs text-gray-400 space-y-2">
+        <p class="font-serif-title text-base font-bold text-turquoise">Hanif & Fanesa</p>
+        <p>&copy; 2026 Crafted with Love & Eternal Affection.</p>
+    </footer>
+
+    <!-- Love Letter Modal -->
+    <div id="letterModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-8 border border-turquoise/40 relative text-center space-y-4">
+            <button onclick="closeLetterModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-deepBlue text-gray-300 flex items-center justify-center hover:bg-turquoise hover:text-deepBlue">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-16 h-16 rounded-full bg-turquoise/20 text-turquoise flex items-center justify-center text-3xl mx-auto">
+                <i class="fa-solid fa-heart text-romanticPink"></i>
+            </div>
+            <h3 id="letterTitle" class="text-2xl font-serif-title font-bold text-sand"></h3>
+            <p id="letterContent" class="text-sm text-gray-200 leading-relaxed italic"></p>
+            <button onclick="closeLetterModal()" class="mt-4 px-6 py-2.5 rounded-full bg-turquoise text-deepBlue font-bold text-xs hover:bg-turquoise/90">
+                Tutup Surat
+            </button>
+        </div>
     </div>
-</div>
 
-<div class="controls">
-    <button class="control-btn" id="replay">↻ Replay</button>
-    <button class="control-btn" id="sound">♫ Sound: Off</button>
-</div>
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="glass-card max-w-3xl w-full rounded-3xl overflow-hidden border border-turquoise/40 relative">
+            <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-deepBlue/80 text-white flex items-center justify-center hover:bg-turquoise hover:text-deepBlue">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="max-h-[70vh] bg-black flex items-center justify-center">
+                <img id="lightboxImg" src="" alt="Preview" class="max-h-[70vh] w-full object-contain">
+            </div>
+            <div class="p-6 text-center">
+                <h3 id="lightboxTitle" class="text-xl font-serif-title font-bold text-turquoise"></h3>
+                <p id="lightboxDesc" class="text-xs text-gray-300 mt-1"></p>
+            </div>
+        </div>
+    </div>
 
-<div class="bottom-note">Made with love · Just for you</div>
+    <script>
+        // Starry Canvas Background Effect
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
 
-<script>
-const sky = document.getElementById("sky");
-const fx = document.getElementById("fx");
-const sctx = sky.getContext("2d");
-const ctx = fx.getContext("2d");
-
-const countdownEl = document.getElementById("countdown");
-const readyEl = document.getElementById("ready");
-const finalEl = document.getElementById("final");
-const introEl = document.getElementById("intro");
-
-let W, H, dpr;
-let stars = [];
-let particles = [];
-let rockets = [];
-let hearts = [];
-
-let phase = "intro";
-let phaseStart = 0;
-let lastCount = 0;
-let count = 3;
-let soundOn = false;
-let audioCtx = null;
-let animationId;
-
-const palette = [
-    "#ff8eae",
-    "#f8d9a0",
-    "#fff3d6",
-    "#e7b7ff",
-    "#a9c7ff",
-    "#ffffff",
-    "#ffb6c8"
-];
-
-function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = innerWidth;
-    H = innerHeight;
-
-    [sky, fx].forEach(c => {
-        c.width = W * dpr;
-        c.height = H * dpr;
-        c.style.width = W + "px";
-        c.style.height = H + "px";
-    });
-
-    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    createStars();
-}
-
-window.addEventListener("resize", resize);
-
-function rand(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-function createStars() {
-    stars = [];
-
-    for (let i = 0; i < 150; i++) {
-        stars.push({
-            x: rand(0, W),
-            y: rand(0, H),
-            r: rand(.4, 1.5),
-            phase: rand(0, Math.PI * 2),
-            speed: rand(.005, .018)
-        });
-    }
-}
-
-function drawStars(time) {
-    sctx.clearRect(0, 0, W, H);
-
-    for (const s of stars) {
-        const alpha = .25 + Math.abs(
-            Math.sin(time * s.speed + s.phase)
-        ) * .65;
-
-        sctx.beginPath();
-        sctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        sctx.fillStyle = `rgba(255,244,230,${alpha})`;
-        sctx.fill();
-    }
-}
-
-class Particle {
-    constructor(x, y, color, vx, vy, size) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.vx = vx;
-        this.vy = vy;
-        this.size = size || rand(1, 2.8);
-        this.life = 1;
-        this.decay = rand(.008, .018);
-        this.gravity = .035;
-    }
-
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        this.vx *= .986;
-        this.vy *= .986;
-        this.vy += this.gravity;
-
-        this.life -= this.decay;
-    }
-
-    draw() {
-        if (this.life <= 0) return;
-
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, this.life);
-        ctx.fillStyle = this.color;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = this.color;
-
-        ctx.beginPath();
-        ctx.arc(
-            this.x, this.y,
-            Math.max(.3, this.size * this.life),
-            0, Math.PI * 2
-        );
-        ctx.fill();
-        ctx.restore();
-    }
-}
-
-function burst(x, y, amount = 100, color) {
-    const c = color || palette[
-        Math.floor(Math.random() * palette.length)
-    ];
-
-    for (let i = 0; i < amount; i++) {
-        const a = rand(0, Math.PI * 2);
-        const speed = Math.pow(Math.random(), .45) * 5.5 + .5;
-
-        particles.push(new Particle(
-            x, y, c,
-            Math.cos(a) * speed,
-            Math.sin(a) * speed,
-            rand(1, 3)
-        ));
-    }
-
-    // Kilauan kecil di sekeliling ledakan
-    for (let i = 0; i < amount * .25; i++) {
-        const a = rand(0, Math.PI * 2);
-        const speed = rand(1, 3);
-
-        particles.push(new Particle(
-            x, y, "#fff5df",
-            Math.cos(a) * speed,
-            Math.sin(a) * speed,
-            rand(.5, 1.5)
-        ));
-    }
-
-    if (soundOn) playChime();
-}
-
-class Rocket {
-    constructor() {
-        this.x = rand(W * .12, W * .88);
-        this.y = H + 5;
-        this.tx = rand(W * .12, W * .88);
-        this.ty = rand(H * .13, H * .53);
-        this.speed = rand(5, 8);
-        this.color = palette[
-            Math.floor(Math.random() * palette.length)
-        ];
-        this.trail = [];
-    }
-
-    update() {
-        this.trail.push({ x: this.x, y: this.y });
-
-        if (this.trail.length > 9) this.trail.shift();
-
-        const dx = this.tx - this.x;
-        const dy = this.ty - this.y;
-        const d = Math.hypot(dx, dy);
-
-        if (d < this.speed + 2) {
-            burst(this.tx, this.ty, 95, this.color);
-            return false;
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
         }
 
-        this.x += dx / d * this.speed;
-        this.y += dy / d * this.speed;
-
-        return true;
-    }
-
-    draw() {
-        ctx.save();
-
-        this.trail.forEach((p, i) => {
-            ctx.globalAlpha = i / this.trail.length * .65;
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "#fff8e8";
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
-    }
-}
-
-function heartBurst(cx, cy) {
-    for (let i = 0; i < 220; i++) {
-        const t = Math.random() * Math.PI * 2;
-
-        const hx = 16 * Math.pow(Math.sin(t), 3);
-        const hy =
-            13 * Math.cos(t)
-            - 5 * Math.cos(2 * t)
-            - 2 * Math.cos(3 * t)
-            - Math.cos(4 * t);
-
-        const x = cx + hx * 7;
-        const y = cy - hy * 7;
-        const dx = x - cx;
-        const dy = y - cy;
-        const spread = rand(.015, .045);
-
-        particles.push(new Particle(
-            x, y,
-            palette[Math.floor(Math.random() * palette.length)],
-            dx * spread,
-            dy * spread,
-            rand(1, 2.5)
-        ));
-    }
-}
-
-function drawHeart(x, y, size, color, alpha) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.scale(size / 30, size / 30);
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = color;
-    ctx.shadowBlur = 12;
-    ctx.shadowColor = color;
-
-    ctx.beginPath();
-    ctx.moveTo(0, 10);
-    ctx.bezierCurveTo(-30, -10, -20, -25, 0, -10);
-    ctx.bezierCurveTo(20, -25, 30, -10, 0, 10);
-    ctx.fill();
-    ctx.restore();
-}
-
-function updateHearts() {
-    if (Math.random() < .035) {
-        hearts.push({
-            x: rand(20, W - 20),
-            y: H + 20,
-            size: rand(8, 18),
-            speed: rand(.4, 1.2),
-            alpha: rand(.2, .55),
-            color: Math.random() > .5 ? "#ff8eae" : "#f8d9a0"
-        });
-    }
-
-    for (let i = hearts.length - 1; i >= 0; i--) {
-        const h = hearts[i];
-        h.y -= h.speed;
-        h.x += Math.sin(h.y * .012) * .35;
-
-        drawHeart(h.x, h.y, h.size, h.color, h.alpha);
-
-        if (h.y < -30) hearts.splice(i, 1);
-    }
-}
-
-function showCountdown(n) {
-    countdownEl.style.display = "block";
-    readyEl.style.display = "block";
-    finalEl.style.display = "none";
-
-    countdownEl.textContent = n;
-
-    // Restart animasi angka
-    countdownEl.style.animation = "none";
-    void countdownEl.offsetWidth;
-    countdownEl.style.animation = "numberIn .85s ease both";
-}
-
-function startFinal() {
-    phase = "final";
-
-    countdownEl.style.display = "none";
-    readyEl.style.display = "none";
-    introEl.style.display = "none";
-    finalEl.style.display = "block";
-
-    heartBurst(W / 2, H / 2);
-
-    for (let i = 0; i < 10; i++) {
-        setTimeout(() => {
-            burst(
-                rand(W * .1, W * .9),
-                rand(H * .12, H * .65),
-                110
-            );
-        }, i * 300);
-    }
-}
-
-function playChime() {
-    try {
-        if (!audioCtx) {
-            audioCtx = new (
-                window.AudioContext || window.webkitAudioContext
-            )();
-        }
-
-        if (audioCtx.state === "suspended") {
-            audioCtx.resume();
-        }
-
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = "sine";
-        osc.frequency.value = rand(520, 950);
-
-        gain.gain.setValueAtTime(.0001, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(
-            .045, audioCtx.currentTime + .025
-        );
-        gain.gain.exponentialRampToValueAtTime(
-            .0001, audioCtx.currentTime + .5
-        );
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start();
-        osc.stop(audioCtx.currentTime + .52);
-    } catch (e) {
-        console.log("Audio tidak tersedia.");
-    }
-}
-
-function restart() {
-    particles = [];
-    rockets = [];
-    hearts = [];
-
-    phase = "intro";
-    phaseStart = performance.now();
-    lastCount = 0;
-    count = 3;
-
-    introEl.style.display = "block";
-    countdownEl.style.display = "none";
-    readyEl.style.display = "none";
-    finalEl.style.display = "none";
-
-    ctx.clearRect(0, 0, W, H);
-}
-
-document.getElementById("replay").addEventListener("click", restart);
-
-document.getElementById("sound").addEventListener("click", () => {
-    soundOn = !soundOn;
-
-    document.getElementById("sound").textContent =
-        soundOn ? "♫ Sound: On" : "♫ Sound: Off";
-
-    if (soundOn) playChime();
-});
-
-function animate(now) {
-    drawStars(now);
-
-    // Jejak tipis untuk efek cahaya yang lembut
-    ctx.fillStyle = "rgba(8, 11, 25, 0.20)";
-    ctx.fillRect(0, 0, W, H);
-
-    const elapsed = now - phaseStart;
-
-    if (phase === "intro") {
-        if (Math.random() < .045) {
-            rockets.push(new Rocket());
-        }
-
-        if (elapsed > 4500) {
-            phase = "countdown";
-            count = 3;
-            lastCount = now;
-            showCountdown(count);
-        }
-    }
-
-    else if (phase === "countdown") {
-        if (now - lastCount >= 1000) {
-            lastCount = now;
-            count--;
-
-            if (count > 0) {
-                showCountdown(count);
-            } else {
-                startFinal();
+        function initStars() {
+            stars = [];
+            const starCount = Math.floor((canvas.width * canvas.height) / 8000);
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.8,
+                    alpha: Math.random(),
+                    speed: 0.005 + Math.random() * 0.015
+                });
             }
         }
 
-        if (Math.random() < .055) {
-            burst(rand(0, W), rand(H * .12, H * .65), 30);
+        function animateStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                star.alpha += star.speed;
+                if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
+                ctx.fillStyle = `rgba(6, 214, 160, ${Math.abs(star.alpha)})`;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateStars);
         }
-    }
 
-    else if (phase === "final") {
-        updateHearts();
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animateStars();
 
-        if (Math.random() < .045) {
-            rockets.push(new Rocket());
+        // Mobile Menu Toggle
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+
+        // Relationship Counter Script
+        let startDate = new Date(localStorage.getItem('hf_startDate') || '2023-02-12T00:00:00');
+
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('countDays').textContent = days;
+            document.getElementById('countHours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('countMinutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('countSeconds').textContent = String(seconds).padStart(2, '0');
         }
 
-        if (Math.random() < .018) {
-            burst(rand(0, W), rand(H * .12, H * .6), 75);
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        function toggleDateInput() {
+            document.getElementById('dateInputContainer').classList.toggle('hidden');
         }
-    }
 
-    for (let i = rockets.length - 1; i >= 0; i--) {
-        const alive = rockets[i].update();
-        rockets[i].draw();
+        function saveStartDate() {
+            const val = document.getElementById('startDateInput').value;
+            if (val) {
+                startDate = new Date(val + 'T00:00:00');
+                localStorage.setItem('hf_startDate', startDate.toISOString());
+                updateCounter();
+                toggleDateInput();
+            }
+        }
 
-        if (!alive) rockets.splice(i, 1);
-    }
+        // Ambient Sound Web Audio API Synthesis
+        let audioCtx = null;
+        let isPlaying = false;
 
-    for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.update();
-        p.draw();
+        document.getElementById('playAudioBtn').addEventListener('click', () => {
+            const vinyl = document.getElementById('vinylRecord');
+            const playText = document.getElementById('playText');
+            const playIcon = document.getElementById('playIcon');
 
-        if (p.life <= 0) particles.splice(i, 1);
-    }
+            if (!isPlaying) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                startRelaxationAudio(audioCtx);
+                isPlaying = true;
+                vinyl.classList.remove('paused');
+                playText.textContent = "Hentikan Musik";
+                playIcon.className = "fa-solid fa-pause";
+            } else {
+                if (audioCtx) audioCtx.close();
+                isPlaying = false;
+                vinyl.classList.add('paused');
+                playText.textContent = "Putar Musik";
+                playIcon.className = "fa-solid fa-play";
+            }
+        });
 
-    animationId = requestAnimationFrame(animate);
-}
+        function startRelaxationAudio(ctx) {
+            // Synth chord generator for relaxing romance mood
+            const notes = [261.63, 329.63, 392.00, 493.88]; // C, E, G, B (Cmaj7)
+            notes.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
 
-resize();
-restart();
-requestAnimationFrame(animate);
-</script>
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
+                gain.gain.setValueAtTime(0.02, ctx.currentTime);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+            });
+        }
+
+        // Digital Love Letters
+        const lettersData = {
+            hanif: {
+                title: "Pesan Tulus Dari Hanif",
+                content: "Terima kasih telah hadir dan mewarnai setiap detik dalam hidupku, Fanesa. Bersamamu, aku belajar arti mendengarkan, menerima, dan mencintai dengan tulus. Semoga kita terus bisa melangkah bersama menghadapi hari esok dengan senyuman."
+            },
+            fanesa: {
+                title: "Pesan Tulus Dari Fanesa",
+                content: "Untuk Hanif, terima kasih atas kesabaran dan kehangatan yang selalu kamu berikan. Kamu adalah tempat ternyaman untuk pulang dan berbagi cerita. Mari kita jaga cerita cinta ini agar selalu indah selamanya."
+            }
+        };
+
+        function openLetter(sender) {
+            const data = lettersData[sender];
+            document.getElementById('letterTitle').textContent = data.title;
+            document.getElementById('letterContent').textContent = `"${data.content}"`;
+            document.getElementById('letterModal').classList.remove('hidden');
+            document.getElementById('letterModal').classList.add('flex');
+        }
+
+        function closeLetterModal() {
+            document.getElementById('letterModal').classList.add('hidden');
+            document.getElementById('letterModal').classList.remove('flex');
+        }
+
+        // Couple Bucket List LocalStorage Progress
+        function updateBucketProgress() {
+            const checkboxes = document.querySelectorAll('.bucket-checkbox');
+            let checkedCount = 0;
+
+            checkboxes.forEach((cb, idx) => {
+                if (cb.checked) checkedCount++;
+                localStorage.setItem(`hf_bucket_${idx}`, cb.checked);
+            });
+
+            const percent = Math.round((checkedCount / checkboxes.length) * 100);
+            document.getElementById('bucketProgressBar').style.width = `${percent}%`;
+            document.getElementById('bucketProgressText').textContent = `${percent}% Terwujud`;
+        }
+
+        // Load saved bucket state
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.bucket-checkbox');
+            checkboxes.forEach((cb, idx) => {
+                const saved = localStorage.getItem(`hf_bucket_${idx}`);
+                if (saved === 'true') cb.checked = true;
+            });
+            updateBucketProgress();
+        });
+
+        // Lightbox Functions
+        function openLightbox(imgUrl, title, desc) {
+            document.getElementById('lightboxImg').src = imgUrl;
+            document.getElementById('lightboxTitle').textContent = title;
+            document.getElementById('lightboxDesc').textContent = desc;
+            document.getElementById('lightboxModal').classList.remove('hidden');
+            document.getElementById('lightboxModal').classList.add('flex');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.add('hidden');
+            document.getElementById('lightboxModal').classList.remove('flex');
+        }
+    </script>
 </body>
 </html>
